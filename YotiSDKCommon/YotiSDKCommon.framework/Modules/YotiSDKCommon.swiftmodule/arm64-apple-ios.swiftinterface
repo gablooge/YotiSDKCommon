@@ -1,0 +1,969 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.5 (swiftlang-1300.0.31.1 clang-1300.0.29.1)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Osize -module-name YotiSDKCommon
+import AVFoundation
+import Foundation
+import Swift
+import UIKit
+import YotiCommon
+import YotiFoundation
+import YotiSDKNetwork
+import _Concurrency
+public struct Session {
+  public let id: Swift.String
+  public let token: Swift.String
+  public init(id: Swift.String = "", token: Swift.String = "")
+}
+public protocol CountryMapping {
+  func country(isoCode: Swift.String) -> YotiCommon.Country?
+  func alpha3(isoCode: Swift.String?) -> Swift.String?
+}
+public struct CountryMapper : Swift.Decodable {
+  public static let shared: YotiSDKCommon.CountryMapper
+  public let countries: [YotiCommon.Country]
+  public init(from decoder: Swift.Decoder) throws
+}
+extension YotiSDKCommon.CountryMapper : YotiSDKCommon.CountryMapping {
+  public func country(isoCode: Swift.String) -> YotiCommon.Country?
+  public func alpha3(isoCode: Swift.String?) -> Swift.String?
+}
+public class RequiredDocumentResource : YotiSDKCommon.RequiredResource {
+  final public let id: Swift.String
+  final public let type: YotiSDKCommon.ResourceType
+  public var state: YotiSDKCommon.ResourceState
+  final public let objective: YotiSDKCommon.Objective
+  final public let captureMethods: [YotiSDKCommon.CaptureMethod]
+  final public let documentCountries: [YotiSDKCommon.DocumentCountry]
+  final public let tasks: [YotiSDKCommon.ResourceTask]
+  public init(id: Swift.String, state: YotiSDKCommon.ResourceState, captureMethods: [YotiSDKCommon.CaptureMethod], documentCountries: [YotiSDKCommon.DocumentCountry], tasks: [YotiSDKCommon.ResourceTask])
+  @objc deinit
+}
+public protocol SessionReading {
+  var session: YotiSDKCommon.Session { get }
+}
+public protocol SessionWriting {
+  func setSession(_ session: YotiSDKCommon.Session)
+}
+public typealias SessionAccessing = YotiSDKCommon.SessionReading & YotiSDKCommon.SessionWriting
+public enum ImageFormattingError : Swift.Error {
+  case invalidImageFormatting
+  public static func == (a: YotiSDKCommon.ImageFormattingError, b: YotiSDKCommon.ImageFormattingError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension YotiSDKCommon.DocumentType {
+  public func title(country: YotiCommon.Country?) -> Swift.String
+  public func body(country: YotiCommon.Country?) -> Swift.String
+  public func isLocalNamingUsed(country: YotiCommon.Country) -> Swift.Bool
+  public var isUnique: Swift.Bool {
+    get
+  }
+  public var tag: YotiSDKCommon.DocumentType.Tag {
+    get
+  }
+}
+extension YotiSDKCommon.DocumentType {
+  public enum Tag : Swift.Int {
+    case passport
+    case drivingLicense
+    case nationalID
+    case stateID
+    case postalID
+    case socialSecuritySystemID
+    case voterID
+    case professionalID
+    case citizenCard
+    case quebecHealthCard
+    case nexusCard
+    case myKad
+    case aadhaar
+    case pan
+    case biometricResidencePermit
+    case utilityBill
+    case councilTaxBill
+    case phoneBill
+    case bankStatement
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  public init(tag: YotiSDKCommon.DocumentType.Tag)
+}
+public enum RoutingDismissAction {
+  case flow(result: YotiSDKCommon.ModuleResult)
+  case sdk(result: YotiSDKCommon.YotiSDKResult)
+}
+public enum CodableError : Swift.Error {
+  case invalidEncoding
+  case invalidDecoding
+  case invalidConfiguration
+  case invalidRequirement
+  public static func == (a: YotiSDKCommon.CodableError, b: YotiSDKCommon.CodableError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension UIKit.UIImage {
+  public func multipart(imageName: Swift.String = "image", compressionQuality: CoreGraphics.CGFloat = 1) -> Swift.Result<YotiSDKNetwork.HTTPMultipart, Swift.Error>
+}
+public protocol SessionConfigurationRetrieving {
+  typealias Handler = (Swift.Result<YotiSDKCommon.SessionConfiguration, Swift.Error>) -> Swift.Void
+  func retrieveSessionConfiguration(then handler: @escaping Self.Handler)
+}
+final public class SessionConfigurationRetriever {
+  public init(sessionDataSource: YotiSDKCommon.SessionReading, encodedDeviceMetadata: YotiSDKCommon.Base64EncodedString, networkServiceConstructor: YotiSDKNetwork.NetworkServiceConstructing, serverLocation: YotiSDKNetwork.ServerLocation)
+  @objc deinit
+}
+extension YotiSDKCommon.SessionConfigurationRetriever : YotiSDKCommon.SessionConfigurationRetrieving {
+  final public func retrieveSessionConfiguration(then handler: @escaping YotiSDKCommon.SessionConfigurationRetriever.Handler)
+}
+public struct PathComponent {
+  public static let base: Swift.String
+}
+public protocol ModuleInitializable {
+  init(configuration: YotiSDKCommon.ModuleConfiguration)
+}
+public protocol AnyDocumentFlowLimitationProviding {
+  var isLimitedToSingleFlow: Swift.Bool { get }
+  var isLimitedToObjective: Swift.Bool { get }
+  var isLimitedToCountry: Swift.Bool { get }
+  var isLimitedToDocumentType: Swift.Bool { get }
+  var firstObjective: YotiSDKCommon.Objective { get }
+  var firstCountry: YotiCommon.Country { get }
+  var firstDocumentType: YotiSDKCommon.DocumentType { get }
+}
+extension UIKit.UITableView {
+  @_Concurrency.MainActor(unsafe) public func register<T>(_ type: T.Type) where T : UIKit.UITableViewCell
+  @_Concurrency.MainActor(unsafe) public func registerNib<T>(_ type: T.Type) where T : UIKit.UITableViewCell
+  @_Concurrency.MainActor(unsafe) public func register<T>(_ type: T.Type) where T : UIKit.UITableViewHeaderFooterView
+  @_Concurrency.MainActor(unsafe) public func dequeueReusableCell<T>(_ type: T.Type, for indexPath: Foundation.IndexPath) -> T where T : UIKit.UITableViewCell
+  @_Concurrency.MainActor(unsafe) public func dequeueReusableHeaderFooter<T>(_ type: T.Type) -> T where T : UIKit.UITableViewHeaderFooterView
+  @_Concurrency.MainActor(unsafe) public func performBatchUpdates(animated: Swift.Bool, updates: (() -> Swift.Void)?)
+}
+public enum CameraPermissionStatus {
+  case authorized
+  case denied
+  case restricted
+  public static func == (a: YotiSDKCommon.CameraPermissionStatus, b: YotiSDKCommon.CameraPermissionStatus) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public protocol SessionConfigurationReading {
+  var sessionConfiguration: YotiSDKCommon.SessionConfiguration? { get }
+}
+public protocol SessionConfigurationWriting {
+  func setSessionConfiguration(_ sessionConfiguration: YotiSDKCommon.SessionConfiguration?)
+}
+public typealias SessionConfigurationAccessing = YotiSDKCommon.SessionConfigurationReading & YotiSDKCommon.SessionConfigurationWriting
+public typealias YotiSDKResult = Swift.Result<Swift.Void, YotiSDKCommon.YotiSDKError>
+public enum Objective : Swift.String, Swift.Codable {
+  case proveIdentity
+  case proveAddress
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum RoutingAction {
+  case dismiss(YotiSDKCommon.RoutingDismissAction)
+  case pop
+}
+public protocol Routing {
+  typealias Handler = (YotiSDKCommon.RoutingResult<Self.Entity>) -> Swift.Void
+  associatedtype Destination
+  associatedtype Entity
+  func show(_ destination: Self.Destination)
+  func show(_ destination: Self.Destination, then handler: Self.Handler?)
+}
+open class Router<Destination> : YotiSDKCommon.Routing where Destination : YotiSDKCommon.RoutingDestination {
+  public typealias Destination = Destination
+  public typealias Entity = Destination.Entity
+  weak public var navigationController: UIKit.UINavigationController! {
+    get
+  }
+  public var presentedFlow: Swift.AnyObject?
+  public init(navigationController: UIKit.UINavigationController)
+  open func show(_ destination: Destination)
+  open func show(_ destination: Destination, then handler: YotiSDKCommon.Router<Destination>.Handler?)
+  @objc deinit
+}
+public protocol FlowProviding {
+  func flows(requiredResources: [YotiSDKCommon.RequiredResource]) -> [YotiSDKCommon.Flow]
+}
+public struct FlowProvider {
+  public init()
+}
+extension YotiSDKCommon.FlowProvider : YotiSDKCommon.FlowProviding {
+  public func flows(requiredResources: [YotiSDKCommon.RequiredResource]) -> [YotiSDKCommon.Flow]
+}
+public enum RoutingTransition {
+  case push
+  case present
+  case previouslyTransitioned
+  public static func == (a: YotiSDKCommon.RoutingTransition, b: YotiSDKCommon.RoutingTransition) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum CameraPermissionError : Swift.Error {
+  case noCameraPermission
+  public static func == (a: YotiSDKCommon.CameraPermissionError, b: YotiSDKCommon.CameraPermissionError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct ApplicationForwarder {
+  public static func open(urlString: Swift.String) throws
+}
+public struct ApplicationForwarderDestination {
+  public static let deviceSettings: Swift.String
+}
+public enum ApplicationForwarderError : Swift.Error {
+  case invalidURL(Swift.String)
+  case cannotOpenURL(Swift.String)
+}
+public struct DocumentCountryRequirement : Swift.Decodable {
+  public let code: Swift.String
+  public let documentRequirements: [YotiSDKCommon.DocumentRequirement]
+  public init(from decoder: Swift.Decoder) throws
+}
+public enum CaptureMethod : Swift.String, Swift.Codable {
+  case camera
+  case upload
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct DataDecoder<T> where T : Swift.Decodable {
+  public static func decode(from data: Foundation.Data) throws -> T
+}
+public protocol StorageProviding {
+  var storage: YotiSDKCommon.StorageAccessing { get }
+}
+public protocol CameraPermissionInteracting {
+  typealias Handler = (YotiSDKCommon.CameraPermissionStatus) -> Swift.Void
+  func requestCameraAccess(then handler: @escaping Self.Handler)
+}
+public struct CameraPermissionInteractor {
+  public init()
+}
+extension YotiSDKCommon.CameraPermissionInteractor : YotiSDKCommon.CameraPermissionInteracting {
+  public func requestCameraAccess(then handler: @escaping YotiSDKCommon.CameraPermissionInteractor.Handler)
+}
+public enum DocumentType : Swift.String, Swift.CaseIterable, Swift.Codable {
+  case passport
+  case drivingLicence
+  case nationalID
+  case stateID
+  case postalID
+  case socialSecuritySystemID
+  case voterID
+  case professionalID
+  case citizenCard
+  case quebecHealthCard
+  case nexusCard
+  case myKad
+  case aadhaar
+  case pan
+  case biometricResidencePermit
+  case utilityBill
+  case councilTaxBill
+  case phoneBill
+  case bankStatement
+  public init?(rawValue: Swift.String)
+  public typealias AllCases = [YotiSDKCommon.DocumentType]
+  public typealias RawValue = Swift.String
+  public static var allCases: [YotiSDKCommon.DocumentType] {
+    get
+  }
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum UploadingStatus {
+  case uploaded(results: [Foundation.Data])
+  case uploading(progress: Swift.Float)
+  case failed(error: Swift.Error)
+}
+public protocol ItemProcessing {
+  typealias Handler = (YotiSDKCommon.ProcessingStatus) -> Swift.Void
+  func process(then handler: @escaping Self.Handler)
+}
+final public class ItemProcessor {
+  public init(uploaders: [YotiSDKCommon.ItemUploading])
+  @objc deinit
+}
+extension YotiSDKCommon.ItemProcessor : YotiSDKCommon.ItemProcessing {
+  final public func process(then handler: @escaping YotiSDKCommon.ItemProcessor.Handler)
+}
+public class RequiredSupplementaryDocumentResource : YotiSDKCommon.RequiredResource {
+  final public let id: Swift.String
+  final public let type: YotiSDKCommon.ResourceType
+  public var state: YotiSDKCommon.ResourceState
+  final public let objective: YotiSDKCommon.Objective
+  final public let countries: [YotiCommon.Country]
+  final public let documentTypes: [YotiSDKCommon.DocumentType]
+  final public let tasks: [YotiSDKCommon.ResourceTask]
+  public init(id: Swift.String, state: YotiSDKCommon.ResourceState, objective: YotiSDKCommon.Objective, countries: [YotiCommon.Country], documentTypes: [YotiSDKCommon.DocumentType], tasks: [YotiSDKCommon.ResourceTask])
+  @objc deinit
+}
+public typealias ModuleResult = Swift.Result<Swift.Void, YotiSDKCommon.ExternalError>
+public typealias Base64EncodedString = Swift.String
+public protocol DeviceMetadataProviding {
+  var encodedDeviceMetadata: YotiSDKCommon.Base64EncodedString { get }
+}
+public typealias ItemProcessorResult = Swift.Result<YotiSDKCommon.ItemProcessing, Swift.Error>
+public struct AlertContent {
+  public let title: Swift.String
+  public let message: Swift.String
+  public let cancel: Swift.String
+  public let retry: Swift.String
+  public init(title: Swift.String, message: Swift.String, cancel: Swift.String, retry: Swift.String)
+}
+extension YotiSDKCommon.SessionConfiguration {
+  public struct Preset : Swift.Decodable {
+    public let issuingCountry: Swift.String?
+    public let privacyPolicyURL: Swift.String?
+    public let hideLogo: Swift.Bool?
+    public init(from decoder: Swift.Decoder) throws
+  }
+}
+extension Swift.Double {
+  public var points: CoreGraphics.CGFloat {
+    get
+  }
+  public var point: CoreGraphics.CGFloat {
+    get
+  }
+  public var pixels: CoreGraphics.CGFloat {
+    get
+  }
+  public var pixel: CoreGraphics.CGFloat {
+    get
+  }
+}
+public protocol RoutingDestination {
+  associatedtype Entity
+  func construct(for router: YotiSDKCommon.Router<Self>, with handler: YotiSDKCommon.RoutingHandler<Self.Entity>?) -> UIKit.UIViewController
+  func transition() -> YotiSDKCommon.RoutingTransition
+}
+public struct YotiSDKError : Swift.Error, Swift.RawRepresentable {
+  public var errorCode: Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+  public init(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+}
+public struct DocumentCountry {
+  public let country: YotiCommon.Country
+  public let documentTypes: [YotiSDKCommon.DocumentType]
+  public init(country: YotiCommon.Country, documentTypes: [YotiSDKCommon.DocumentType])
+}
+public enum ExternalError : Swift.Int, Swift.Error {
+  case cancelledByUser
+  case unauthorisedRequest
+  case sessionNotFound
+  case sessionExpired
+  case launchedWithoutToken
+  case launchedWithoutID
+  case serverError
+  case networkRequestError
+  case noNetworkConnection
+  case noCameraPermission
+  case wrongDocumentSubmittedByUser
+  case noCamera
+  case exceededLivenessAttempts
+  case invalidVersion
+  case unexpectedInternalError
+  case unexpectedDocumentCaptureError
+  case unexpectedLivenessCaptureError
+  case unsupportedConfiguration
+  case documentDependencyNotFound
+  case zoomDependencyNotFound
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+public enum ResourceType : Swift.String, Swift.Decodable {
+  case document
+  case supplementaryDocument
+  case liveness
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol Styling {
+  var fontFamily: YotiSDKCommon.FontFamily { get }
+  var fontColor: UIKit.UIColor { get }
+  var primaryColor: UIKit.UIColor { get }
+}
+extension YotiCommon.Country : Swift.Decodable {
+  public init(from decoder: Swift.Decoder) throws
+}
+extension YotiCommon.Country {
+  public var code: Swift.String {
+    get
+  }
+  public var localizedName: Swift.String {
+    get
+  }
+  public var isCanada: Swift.Bool {
+    get
+  }
+  public var isFrance: Swift.Bool {
+    get
+  }
+  public var isIndonesia: Swift.Bool {
+    get
+  }
+  public var isItaly: Swift.Bool {
+    get
+  }
+  public var isPhilippines: Swift.Bool {
+    get
+  }
+  public var isRussia: Swift.Bool {
+    get
+  }
+}
+extension YotiCommon.Country : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum LocaleError : Swift.Error {
+  case invalidCountryCode
+  public static func == (a: YotiSDKCommon.LocaleError, b: YotiSDKCommon.LocaleError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension YotiSDKCommon.SessionConfiguration {
+  public struct Capture : Swift.Decodable {
+    public let biometricConsent: YotiSDKCommon.BiometricConsent
+    public let requiredResources: [YotiSDKCommon.RequiredResource]
+    public let hasPendingExternalSourceRequirements: Swift.Bool
+    public init(from decoder: Swift.Decoder) throws
+  }
+}
+extension Foundation.URL {
+  public static func + (lhs: Foundation.URL, rhs: Swift.String) -> Foundation.URL
+}
+public struct UploadingItem {
+  public init(requestConfiguration: YotiSDKNetwork.RequestConfiguration)
+}
+extension YotiSDKCommon.UploadingItem : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+extension YotiSDKCommon.UploadingItem : Swift.Equatable {
+  public static func == (lhs: YotiSDKCommon.UploadingItem, rhs: YotiSDKCommon.UploadingItem) -> Swift.Bool
+}
+public enum ResourceState : Swift.String, Swift.Codable {
+  case required
+  case inProgress
+  case complete
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public enum LivenessType : Swift.String, Swift.Decodable {
+  case zoom
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol ListDataSource : UIKit.UITableViewDataSource {
+  func registerForUpdates(_ tableView: UIKit.UITableView)
+}
+@_Concurrency.MainActor(unsafe) open class ListViewDataSource<Group, Element> : ObjectiveC.NSObject, YotiSDKCommon.ListDataSource where Group : Swift.Hashable {
+  @_Concurrency.MainActor(unsafe) public init(dataCollection: YotiFoundation.AnyDataGroup<Group, Element>)
+  @_Concurrency.MainActor(unsafe) open func cellType(element: Element, indexPath: Foundation.IndexPath) -> UIKit.UITableViewCell.Type?
+  @_Concurrency.MainActor(unsafe) open func configure(cell: UIKit.UITableViewCell, element: Element)
+  @_Concurrency.MainActor(unsafe) open func headerTitle(group: Group) -> Swift.String?
+  @_Concurrency.MainActor(unsafe) open func indexTitle(group: Group) -> Swift.String?
+  @_Concurrency.MainActor(unsafe) open func indexTitles(groups: [Group]) -> [Swift.String]?
+  @_Concurrency.MainActor(unsafe) open func sectionForSectionIndexTitle(_ title: Swift.String, index: Swift.Int) -> Swift.Int
+  @_Concurrency.MainActor(unsafe) public func registerForUpdates(_ tableView: UIKit.UITableView)
+  @_Concurrency.MainActor(unsafe) @objc public func numberOfSections(in tableView: UIKit.UITableView) -> Swift.Int
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, numberOfRowsInSection section: Swift.Int) -> Swift.Int
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, cellForRowAt indexPath: Foundation.IndexPath) -> UIKit.UITableViewCell
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, titleForHeaderInSection section: Swift.Int) -> Swift.String?
+  @_Concurrency.MainActor(unsafe) @objc public func sectionIndexTitles(for tableView: UIKit.UITableView) -> [Swift.String]?
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, sectionForSectionIndexTitle title: Swift.String, at index: Swift.Int) -> Swift.Int
+  @objc deinit
+}
+public enum CheckType : Swift.String, Swift.Codable {
+  case idDocumentAuthenticity
+  case idDocumentComparison
+  case idDocumentFaceMatch
+  case idDocumentTextDataCheck
+  case supplementaryDocumentTextDataCheck
+  case liveness
+  case thirdPartyIdentity
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public protocol NetworkServiceConstructorProviding {
+  var networkServiceConstructor: YotiSDKNetwork.NetworkServiceConstructing { get }
+}
+public typealias RoutingHandler<Entity> = (YotiSDKCommon.RoutingResult<Entity>) -> Swift.Void
+public typealias AnyRoutingHandler = YotiSDKCommon.RoutingHandler<Swift.Void>
+public struct IndexedImage {
+  public let image: UIKit.UIImage
+  public let index: Swift.Int
+  public init(image: UIKit.UIImage, index: Swift.Int)
+}
+extension Swift.Array where Element == YotiSDKCommon.IndexedImage {
+  public init(images: [UIKit.UIImage])
+}
+extension YotiSDKCommon.IndexedImage : Swift.Hashable {
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: YotiSDKCommon.IndexedImage, b: YotiSDKCommon.IndexedImage) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public enum RoutingResult<Entity> {
+  case action(YotiSDKCommon.RoutingAction)
+  case assignment(YotiSDKCommon.RoutingAssignment)
+  case entity(Entity)
+}
+public typealias AnyRoutingResult = YotiSDKCommon.RoutingResult<Swift.Void>
+public typealias RequestConfigurationResult = Swift.Result<YotiSDKNetwork.RequestConfiguration, Swift.Error>
+public protocol ModuleIdentifiable {
+  static var identifier: YotiSDKCommon.ModuleIdentifier { get }
+}
+public enum ModuleIdentifier {
+  case yotiSDKDocument
+  case yotiSDKZoom
+  public static func == (a: YotiSDKCommon.ModuleIdentifier, b: YotiSDKCommon.ModuleIdentifier) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct SessionDataSource {
+  public init(storage: YotiSDKCommon.StorageAccessing)
+}
+extension YotiSDKCommon.SessionDataSource : YotiSDKCommon.SessionReading {
+  public var session: YotiSDKCommon.Session {
+    get
+  }
+}
+extension YotiSDKCommon.SessionDataSource : YotiSDKCommon.SessionWriting {
+  public func setSession(_ session: YotiSDKCommon.Session)
+}
+public protocol ModuleDelegate : AnyObject {
+  func module<Module>(_ module: Module, didFinishWithResult result: YotiSDKCommon.ModuleResult) where Module : YotiSDKCommon.YotiSDKModule
+}
+public protocol Localizable : Swift.CodingKey, YotiSDKCommon.BundleIdentifiable {
+  var localized: Swift.String { get }
+  func localized(arguments: Swift.CVarArg...) -> Swift.String
+}
+extension YotiSDKCommon.Localizable {
+  public var localized: Swift.String {
+    get
+  }
+  public func localized(arguments: Swift.CVarArg...) -> Swift.String
+}
+public struct HeaderComponent {
+  public static func defaultHeaders(sessionToken: Swift.String, encodedDeviceMetadata: YotiSDKCommon.Base64EncodedString) -> YotiSDKCommon.HeaderComponentResult
+}
+public protocol ModuleStartable {
+  func start(navigationController: UIKit.UINavigationController, routingHandler: YotiSDKCommon.AnyRoutingHandler?)
+}
+final public class ModuleConfiguration {
+  final public let storage: YotiSDKCommon.StorageAccessing
+  final public let encodedDeviceMetadata: YotiSDKCommon.Base64EncodedString
+  final public let networkServiceConstructor: YotiSDKNetwork.NetworkServiceConstructing
+  final public let serverLocation: YotiSDKNetwork.ServerLocation
+  final public let style: YotiSDKCommon.Styling
+  public init(storage: YotiSDKCommon.StorageAccessing, encodedDeviceMetadata: YotiSDKCommon.Base64EncodedString, networkServiceConstructor: YotiSDKNetwork.NetworkServiceConstructing, serverLocation: YotiSDKNetwork.ServerLocation, style: YotiSDKCommon.Styling)
+  @objc deinit
+}
+public protocol RequiredResource {
+  var id: Swift.String { get }
+  var type: YotiSDKCommon.ResourceType { get }
+  var state: YotiSDKCommon.ResourceState { get set }
+}
+extension YotiSDKCommon.ExternalError {
+  public init?(error: Swift.Error)
+}
+public class RequiredLivenessResource : YotiSDKCommon.RequiredResource {
+  final public let id: Swift.String
+  final public let type: YotiSDKCommon.ResourceType
+  public var state: YotiSDKCommon.ResourceState
+  final public let livenessType: YotiSDKCommon.LivenessType
+  public init(id: Swift.String, state: YotiSDKCommon.ResourceState, livenessType: YotiSDKCommon.LivenessType)
+  @objc deinit
+}
+public enum ProcessingStatus {
+  case processing(progress: Swift.Float)
+  case processed(results: [Foundation.Data])
+  case failed(error: Swift.Error)
+}
+public protocol StorageReading {
+  func value<T>(forKey key: Swift.String) -> T?
+}
+public protocol StorageWriting {
+  func setValue(_ value: Any?, forKey key: Swift.String)
+}
+public typealias StorageAccessing = YotiSDKCommon.StorageReading & YotiSDKCommon.StorageWriting
+public struct SupplementaryDocumentFlowLimitationProvider : YotiSDKCommon.AnyDocumentFlowLimitationProviding {
+  public let isLimitedToSingleFlow: Swift.Bool
+  public let isLimitedToObjective: Swift.Bool
+  public let isLimitedToCountry: Swift.Bool
+  public let isLimitedToDocumentType: Swift.Bool
+  public let firstObjective: YotiSDKCommon.Objective
+  public let firstCountry: YotiCommon.Country
+  public let firstDocumentType: YotiSDKCommon.DocumentType
+}
+extension YotiSDKCommon.SupplementaryDocumentFlowLimitationProvider {
+  public init?(flows: [YotiSDKCommon.Flow])
+}
+public struct SessionConfiguration : Swift.Decodable {
+  public let id: Swift.String
+  public let checkTypes: [YotiSDKCommon.CheckType]
+  public let capture: YotiSDKCommon.SessionConfiguration.Capture
+  public let preset: YotiSDKCommon.SessionConfiguration.Preset
+  public init(from decoder: Swift.Decoder) throws
+}
+@_Concurrency.MainActor(unsafe) open class ListViewDelegate<Group, Element> : ObjectiveC.NSObject, YotiSDKCommon.ListDelegate where Group : Swift.Hashable {
+  @_Concurrency.MainActor(unsafe) public init(dataCollection: YotiFoundation.AnyDataGroup<Group, Element>)
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, didSelectRowAt indexPath: Foundation.IndexPath)
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, viewForHeaderInSection section: Swift.Int) -> UIKit.UIView?
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, viewForFooterInSection section: Swift.Int) -> UIKit.UIView?
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, heightForHeaderInSection section: Swift.Int) -> CoreGraphics.CGFloat
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, heightForFooterInSection section: Swift.Int) -> CoreGraphics.CGFloat
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, estimatedHeightForRowAt indexPath: Foundation.IndexPath) -> CoreGraphics.CGFloat
+  @_Concurrency.MainActor(unsafe) @objc public func tableView(_ tableView: UIKit.UITableView, heightForRowAt indexPath: Foundation.IndexPath) -> CoreGraphics.CGFloat
+  @_Concurrency.MainActor(unsafe) open func headerType(group: Group, section: Swift.Int) -> UIKit.UITableViewHeaderFooterView.Type?
+  @_Concurrency.MainActor(unsafe) open func headerHeight(group: Group?) -> CoreGraphics.CGFloat
+  @_Concurrency.MainActor(unsafe) open func footerType(group: Group, section: Swift.Int) -> UIKit.UITableViewHeaderFooterView.Type?
+  @_Concurrency.MainActor(unsafe) open func footerHeight(group: Group?) -> CoreGraphics.CGFloat
+  @_Concurrency.MainActor(unsafe) open func estimatedCellHeight(element: Element?) -> CoreGraphics.CGFloat?
+  @_Concurrency.MainActor(unsafe) open func cellHeight(element: Element?) -> CoreGraphics.CGFloat?
+  @_Concurrency.MainActor(unsafe) open func configure(header: UIKit.UITableViewHeaderFooterView, group: Group)
+  @_Concurrency.MainActor(unsafe) open func configure(footer: UIKit.UITableViewHeaderFooterView, group: Group)
+  @_Concurrency.MainActor(unsafe) open func didSelect(element: Element?, tableView: UIKit.UITableView, indexPath: Foundation.IndexPath)
+  @objc deinit
+}
+public protocol ListDelegate : UIKit.UITableViewDelegate {
+}
+public protocol StyleProviding {
+  var style: YotiSDKCommon.Styling { get }
+}
+extension YotiSDKCommon.ResourceTask {
+  public enum `Type` : Swift.String, Swift.Codable {
+    case idDocumentTextDataExtraction
+    case supplementaryDocumentTextDataExtraction
+    public init?(rawValue: Swift.String)
+    public typealias RawValue = Swift.String
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+}
+final public class Flow {
+  public typealias `Type` = YotiSDKCommon.ResourceType
+  public typealias State = YotiSDKCommon.ResourceState
+  final public let index: Swift.Int
+  final public let id: Swift.String
+  final public let type: YotiSDKCommon.Flow.`Type`
+  final public var state: YotiSDKCommon.Flow.State {
+    get
+    set
+  }
+  final public var requiredResource: YotiSDKCommon.RequiredResource
+  public init(index: Swift.Int, requiredResource: YotiSDKCommon.RequiredResource)
+  @objc deinit
+}
+public protocol BrandingInteracting {
+  var shouldShowBranding: Swift.Bool { get }
+}
+final public class BrandingInteractor {
+  final public var shouldShowBranding: Swift.Bool {
+    get
+    set
+  }
+  public init(sessionConfigurationDataSource: YotiSDKCommon.SessionConfigurationReading)
+  @objc deinit
+}
+extension YotiSDKCommon.BrandingInteractor : YotiSDKCommon.BrandingInteracting {
+}
+public enum BiometricConsent : Swift.String, Swift.Decodable {
+  case required
+  case notRequired
+  case captured
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+public struct EntityEncoder<T> where T : Swift.Encodable {
+  public static func encode(_ entity: T) throws -> Foundation.Data
+}
+public struct ResourceTask : Swift.Codable {
+  public let type: YotiSDKCommon.ResourceTask.`Type`
+  public let state: YotiSDKCommon.ResourceState
+  public init(type: YotiSDKCommon.ResourceTask.`Type`, state: YotiSDKCommon.ResourceState)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public enum FontFamily : Swift.String, Swift.CodingKey {
+  case gothicA1
+  public init?(rawValue: Swift.String)
+  public init?(stringValue: Swift.String)
+  public init?(intValue: Swift.Int)
+  public typealias RawValue = Swift.String
+  public var intValue: Swift.Int? {
+    get
+  }
+  public var rawValue: Swift.String {
+    get
+  }
+  public var stringValue: Swift.String {
+    get
+  }
+}
+public struct SessionConfigurationDataSource {
+  public init(storage: YotiSDKCommon.StorageAccessing)
+}
+extension YotiSDKCommon.SessionConfigurationDataSource : YotiSDKCommon.SessionConfigurationReading {
+  public var sessionConfiguration: YotiSDKCommon.SessionConfiguration? {
+    get
+  }
+}
+extension YotiSDKCommon.SessionConfigurationDataSource : YotiSDKCommon.SessionConfigurationWriting {
+  public func setSessionConfiguration(_ sessionConfiguration: YotiSDKCommon.SessionConfiguration?)
+}
+public struct DocumentRequirement : Swift.Decodable {
+  public let type: YotiSDKCommon.DocumentType?
+  public init(from decoder: Swift.Decoder) throws
+}
+public typealias HeaderComponentResult = Swift.Result<[YotiSDKNetwork.HTTPHeader], Swift.Error>
+public protocol BundleIdentifiable {
+  var bundleIdentifier: Swift.String { get }
+}
+public typealias MultiFlowHandler = (Swift.Bool) -> Swift.Void
+public typealias AssignmentResult = Swift.Result<Swift.Void, Swift.Error>
+public typealias AssignmentHandler = (YotiSDKCommon.AssignmentResult) -> Swift.Void
+public enum RoutingAssignment {
+  case isContainedInMultiFlow(YotiSDKCommon.MultiFlowHandler)
+  case waitFor(YotiSDKCommon.AssignmentHandler)
+}
+public protocol LocaleInteracting {
+  var countryCode: Swift.String { get }
+  func countryName(for countryCode: Swift.String) throws -> Swift.String
+}
+public struct LocaleInteractor {
+  public init(locale: Foundation.Locale = .current)
+}
+extension YotiSDKCommon.LocaleInteractor : YotiSDKCommon.LocaleInteracting {
+  public var countryCode: Swift.String {
+    get
+  }
+  public func countryName(for countryCode: Swift.String) throws -> Swift.String
+}
+public protocol ServerLocationProviding {
+  var serverLocation: YotiSDKNetwork.ServerLocation { get }
+}
+public struct DocumentFlowLimitationProvider : YotiSDKCommon.AnyDocumentFlowLimitationProviding {
+  public let isLimitedToSingleFlow: Swift.Bool
+  public let isLimitedToObjective: Swift.Bool
+  public let isLimitedToCountry: Swift.Bool
+  public let isLimitedToDocumentType: Swift.Bool
+  public let firstObjective: YotiSDKCommon.Objective
+  public let firstCountry: YotiCommon.Country
+  public let firstDocumentType: YotiSDKCommon.DocumentType
+}
+extension YotiSDKCommon.DocumentFlowLimitationProvider {
+  public init?(flows: [YotiSDKCommon.Flow])
+}
+extension UIKit.UIDevice {
+  public enum Platform : Swift.String, Swift.CodingKey {
+    case unknown
+    case simulator
+    case simulatoriPhone
+    case simulatoriPad
+    case simulatorAppleTV
+    case iPhone1G
+    case iPhone3G
+    case iPhone3GS
+    case iPhone4
+    case iPhone4S
+    case iPhone5
+    case iPhone5C
+    case iPhone5S
+    case iPhone5S_GSM
+    case iPhone5S_Global
+    case iPhone6
+    case iPhone6Plus
+    case iPhone6S
+    case iPhone6SPlus
+    case iPhoneSE
+    case iPhoneSE_GSM_CDMA
+    case iPhoneSE2G
+    case iPhone7
+    case iPhone7Plus
+    case iPhone8
+    case iPhone8Plus
+    case iPhoneX
+    case iPhoneXs
+    case iPhoneXsMax
+    case iPhoneXr
+    case iPhone11
+    case iPhone11Pro
+    case iPhone11ProMax
+    case iPod1G
+    case iPod2G
+    case iPod3G
+    case iPod4G
+    case iPod5G
+    case iPod6G
+    case iPad1G
+    case iPad2G
+    case iPad3G
+    case iPad4G
+    case iPadMini1G
+    case iPadMini2G
+    case iPadMini3G
+    case iPadMini4G
+    case iPadAir
+    case iPadAir2
+    case iPadPro
+    case appleTV2
+    case appleTV3
+    case appleTV4
+    case unknowniPhone
+    case unknowniPod
+    case unknowniPad
+    case unknownAppleTV
+    case ifpga
+    public init?(rawValue: Swift.String)
+    public init?(stringValue: Swift.String)
+    public init?(intValue: Swift.Int)
+    public typealias RawValue = Swift.String
+    public var intValue: Swift.Int? {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+    public var stringValue: Swift.String {
+      get
+    }
+  }
+  @_Concurrency.MainActor(unsafe) public static let platform: UIKit.UIDevice.Platform
+}
+public protocol ItemUploading {
+  var progress: Swift.Float { get }
+  var hasCompleted: Swift.Bool { get }
+  typealias Handler = (YotiSDKCommon.UploadingStatus) -> Swift.Void
+  func upload(then handler: @escaping Self.Handler)
+}
+final public class ItemUploader {
+  public init(networkServiceConstructor: YotiSDKNetwork.NetworkServiceConstructing, items: [YotiSDKCommon.UploadingItem])
+  @objc deinit
+}
+extension YotiSDKCommon.ItemUploader : YotiSDKCommon.ItemUploading {
+  final public func upload(then handler: @escaping YotiSDKCommon.ItemUploader.Handler)
+  final public var progress: Swift.Float {
+    get
+  }
+  final public var hasCompleted: Swift.Bool {
+    get
+  }
+}
+public struct ObjectiveRequirement : Swift.Decodable {
+  public let type: YotiSDKCommon.Objective
+  public init(from decoder: Swift.Decoder) throws
+}
+extension YotiSDKCommon.Objective {
+  public func text() -> Swift.String
+}
+@objc public protocol YotiSDKModule {
+}
+extension YotiSDKCommon.ImageFormattingError : Swift.Equatable {}
+extension YotiSDKCommon.ImageFormattingError : Swift.Hashable {}
+extension YotiSDKCommon.DocumentType : Swift.Equatable {}
+extension YotiSDKCommon.DocumentType : Swift.Hashable {}
+extension YotiSDKCommon.DocumentType : Swift.RawRepresentable {}
+extension YotiSDKCommon.DocumentType.Tag : Swift.Equatable {}
+extension YotiSDKCommon.DocumentType.Tag : Swift.Hashable {}
+extension YotiSDKCommon.DocumentType.Tag : Swift.RawRepresentable {}
+extension YotiSDKCommon.CodableError : Swift.Equatable {}
+extension YotiSDKCommon.CodableError : Swift.Hashable {}
+extension YotiSDKCommon.CameraPermissionStatus : Swift.Equatable {}
+extension YotiSDKCommon.CameraPermissionStatus : Swift.Hashable {}
+extension YotiSDKCommon.Objective : Swift.Equatable {}
+extension YotiSDKCommon.Objective : Swift.Hashable {}
+extension YotiSDKCommon.Objective : Swift.RawRepresentable {}
+extension YotiSDKCommon.RoutingTransition : Swift.Equatable {}
+extension YotiSDKCommon.RoutingTransition : Swift.Hashable {}
+extension YotiSDKCommon.CameraPermissionError : Swift.Equatable {}
+extension YotiSDKCommon.CameraPermissionError : Swift.Hashable {}
+extension YotiSDKCommon.CaptureMethod : Swift.Equatable {}
+extension YotiSDKCommon.CaptureMethod : Swift.Hashable {}
+extension YotiSDKCommon.CaptureMethod : Swift.RawRepresentable {}
+extension YotiSDKCommon.ExternalError : Swift.Equatable {}
+extension YotiSDKCommon.ExternalError : Swift.Hashable {}
+extension YotiSDKCommon.ExternalError : Swift.RawRepresentable {}
+extension YotiSDKCommon.ResourceType : Swift.Equatable {}
+extension YotiSDKCommon.ResourceType : Swift.Hashable {}
+extension YotiSDKCommon.ResourceType : Swift.RawRepresentable {}
+extension YotiSDKCommon.LocaleError : Swift.Equatable {}
+extension YotiSDKCommon.LocaleError : Swift.Hashable {}
+extension YotiSDKCommon.ResourceState : Swift.Equatable {}
+extension YotiSDKCommon.ResourceState : Swift.Hashable {}
+extension YotiSDKCommon.ResourceState : Swift.RawRepresentable {}
+extension YotiSDKCommon.LivenessType : Swift.Equatable {}
+extension YotiSDKCommon.LivenessType : Swift.Hashable {}
+extension YotiSDKCommon.LivenessType : Swift.RawRepresentable {}
+extension YotiSDKCommon.CheckType : Swift.Equatable {}
+extension YotiSDKCommon.CheckType : Swift.Hashable {}
+extension YotiSDKCommon.CheckType : Swift.RawRepresentable {}
+extension YotiSDKCommon.ModuleIdentifier : Swift.Equatable {}
+extension YotiSDKCommon.ModuleIdentifier : Swift.Hashable {}
+extension YotiSDKCommon.ResourceTask.`Type` : Swift.Equatable {}
+extension YotiSDKCommon.ResourceTask.`Type` : Swift.Hashable {}
+extension YotiSDKCommon.ResourceTask.`Type` : Swift.RawRepresentable {}
+extension YotiSDKCommon.BiometricConsent : Swift.Equatable {}
+extension YotiSDKCommon.BiometricConsent : Swift.Hashable {}
+extension YotiSDKCommon.BiometricConsent : Swift.RawRepresentable {}
+extension YotiSDKCommon.FontFamily : Swift.Equatable {}
+extension YotiSDKCommon.FontFamily : Swift.Hashable {}
+extension YotiSDKCommon.FontFamily : Swift.RawRepresentable {}
+extension UIKit.UIDevice.Platform : Swift.Equatable {}
+extension UIKit.UIDevice.Platform : Swift.Hashable {}
+extension UIKit.UIDevice.Platform : Swift.RawRepresentable {}

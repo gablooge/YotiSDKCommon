@@ -1,0 +1,4 @@
+framework module YotiSDKCommon {
+  header "YotiSDKCommon-Swift.h"
+  requires objc
+}
